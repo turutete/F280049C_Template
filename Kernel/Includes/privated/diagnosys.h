@@ -34,7 +34,10 @@ enum SYSTEM_LOG_EVENTS
     EXTERNAL_CLOCK_OK,
     EXTERNAL_CLOCK_KO,
     PLL_OK,
-    PLL_KO
+    PLL_KO,
+    M0M1_RAM_KO,
+    LSX_RAM_KO,
+    GSX_RAM_KO
 
 };
 

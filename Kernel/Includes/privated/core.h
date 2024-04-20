@@ -21,6 +21,8 @@
 
 #define LOCK_TRIAL              5
 
+#define TRIAL_INITRAMS          5                   // Número máximo de espera de inicialización de RAM
+
 
 enum DCDC_1200mV_VALUES
 {
@@ -69,6 +71,7 @@ extern uint16 _FlashinitLoadSize;
 
 // Método público para Kernel, pero no accesible a Aplicación
 extern void CalmDown_Watchdog(void);
+extern void Failure_System_Reboot(void);
 
 #endif
 

@@ -27,20 +27,24 @@
  *  * Implementa un planificador de tareas que puede configurarse para ser o no preemtivo.
  *  * Implementa un mecanismo de actualización de SW
  *  * Implementa un mecanismo de diagnóstico, para permitir la identificación de problemas en ejecución.
- *  * Implementa diversos servicios, que pueden ser utilizados por la aplicación
+ *  * Implementa diversos servicios que pueden ser utilizados por la aplicación:
+ *  > * Protocolos de comunicación
+ *  > * Cálculo matemático
+ *  > * Procesado de señales
  *
  *  Aplicaciones con Kernel
  *  -----------------------
  *  El proyecto *_Project_Template_* es una plantilla para crear aplicaciones empotradas para la famlia C28X
  *  de Texas Instruments. De esta manera, para crear un nuevo proyecto, basta:
  *
- *  1. Clonar la versión más actualizada del proyecto *_Project_Template_* del repositorio oficial en el Workspace de nuestro
+ *  1. Clonar la versión más actualizada del proyecto *_F280049C_Template_* del repositorio oficial en el Workspace de nuestro
  *  ordenador.
  *  2. Configurar en ***system.h*** las definiciones que se ajusten al HW real en el que se ejecutará la aplicación
  *  3. Desarrollar la aplicación dentro de la carpeta  ***Application***, de acuerdo con las reglas de
  *  desarrollo de código de UTI-SW.
  *
  *  \image  html    arquitectura_proyecto.jpg
+ *  \image  latex   arquitectura_proyecto.jpg
  *
  *  El usuario sólo debe modificar el contenido del fichero ***system.h***. No debe modificar ningún otro
  *  fichero de **Kernel**.
@@ -202,6 +206,7 @@ void Create_Vector_Table(void);
 void Boot_Failure(void);
 void Init_Kernel_Object(int16);
 void CalmDown_Watchdog(void);
+void Failure_System_Reboot(void);
 
 // Métodos de core.c
 void Pre_Kernel(void)
@@ -210,9 +215,7 @@ void Pre_Kernel(void)
 
     Diagnosys.Init_System_Log();
 
-#ifdef CPU1
     Power_On();
-#endif
 
     estado=Check_Processor();
 
@@ -220,15 +223,15 @@ void Pre_Kernel(void)
     {
         Check_Reset_Cause();
         Init_Flash();
-#ifdef CPU1
+
         Configure_Clocks();
         Configure_RAM();
-#endif
+
         Copy_Flash_to_RAM();
         Init_Peripherals();
-#ifdef CPU1
+
         Configure_Watchdog();
-#endif
+
         Create_Vector_Table();
         Init_Kernel_Object(estado);
     }
@@ -248,7 +251,6 @@ void Kernel(void)
 
 }
 
-#ifdef CPU1
 void Power_On(void)
 {
  #if (DCDC_1200mV_EXTERNO==false)
@@ -311,7 +313,6 @@ void Power_On(void)
 #endif
 
 }
-#endif
 
 int16 Check_Processor(void)
 {
@@ -341,15 +342,8 @@ void Check_Reset_Cause(void)
         if(CpuSysRegs.RESC.bit.XRSn)
             Diagnosys.Write_Event(EXTERNAL_RESET);
     }
-#ifdef _F28379D
-    CpuSysRegs.RESC.all=0x0000016F;
-#endif
 
-#ifdef _F280049C
     CpuSysRegs.RESCCLR.all=0x0000010F;
-#endif
-
-
 
 }
 
@@ -507,6 +501,77 @@ void Configure_Clocks(void)
 
 void Configure_RAM(void)
 {
+    Uint16 flag_initm0m1=false;
+    Uint16 flag_initlsx=false;
+    Uint16 flag_initgsx=false;
+    Uint16 trial;
+
+
+    // Inicializa M0 y M1 (RAM de CPU)
+    MemCfgRegs.DxINIT.bit.INIT_M0=ON;
+    MemCfgRegs.DxINIT.bit.INIT_M1=ON;
+
+    trial=TRIAL_INITRAMS;
+
+    do
+    {
+        if(flag_initm0m1==false)
+            if(MemCfgRegs.DxINITDONE.all==0x0003)
+                flag_initm0m1=true;
+        trial--;
+    } while(flag_initm0m1==false && trial>0);
+
+
+    // Inicializa LS0 - LS7 (RAM CPU y CLA)
+    MemCfgRegs.LSxMSEL.all=LS_CONFIG;
+    MemCfgRegs.LSxCLAPGM.all=LS_IS_PROGRAM;
+    MemCfgRegs.LSxACCPROT0.all=LSXACCPROT0;
+    MemCfgRegs.LSxACCPROT1.all=LSXACCPROT1;
+
+    MemCfgRegs.LSxINIT.all=LS_RAM_ON;
+
+    trial=TRIAL_INITRAMS;
+
+    do
+    {
+        if(flag_initlsx==false)
+            if(MemCfgRegs.LSxINITDONE.all==0x000F)
+                flag_initlsx=true;
+        trial--;
+    } while(flag_initlsx==false && trial>0);
+
+    // Inicializa GS0 -- GS3
+
+    MemCfgRegs.GSxINIT.all=0x000F;          // Inicializa todos los bloques de memoria GSx
+
+    trial=TRIAL_INITRAMS;
+
+    do
+    {
+        if(flag_initgsx==false)
+            if(MemCfgRegs.LSxINITDONE.all==0x000F)
+                flag_initgsx=true;
+        trial--;
+    } while(flag_initgsx==false && trial>0);
+
+    // Comprobación de inicialización de memoria RAM
+    if(flag_initm0m1==false)
+    {
+        Diagnosys.Write_Event(M0M1_RAM_KO);
+        Failure_System_Reboot();
+    }
+
+    if(flag_initlsx==false)
+    {
+        Diagnosys.Write_Event(LSX_RAM_KO);
+        Failure_System_Reboot();
+    }
+
+    if(flag_initgsx==false)
+    {
+        Diagnosys.Write_Event(GSX_RAM_KO);
+        Failure_System_Reboot();
+    }
 
 }
 

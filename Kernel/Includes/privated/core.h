@@ -64,10 +64,17 @@ typedef struct
     uint32 device_id;
 }device_info;
 
+
+
 extern device_info dispositivo;
 extern uint32 * _FlashinitLoadStart;
 extern uint32 *_FlashinitRunStart;
 extern uint16 _FlashinitLoadSize;
+
+extern uint32 * _CpuinramLoadStart;
+extern uint32 * _CpuinramRunStart;
+extern uint16 _CpuinramLoadSize;
+
 
 // Método público para Kernel, pero no accesible a Aplicación
 extern void CalmDown_Watchdog(void);

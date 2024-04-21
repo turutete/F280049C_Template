@@ -199,7 +199,8 @@ void Init_Flash(void);
 void Configure_Flash(void);
 void Configure_Clocks(void);
 void Configure_RAM(void);
-void Copy_Flash_to_RAM(void);
+void Copy_FastApp_to_RAM(void);
+void Copy_Flash_to_RAM(Uint32 *,Uint32 *,Uint16);
 void Init_Peripherals(void);
 void Configure_Watchdog(void);
 void Create_Vector_Table(void);
@@ -227,7 +228,7 @@ void Pre_Kernel(void)
         Configure_Clocks();
         Configure_RAM();
 
-        Copy_Flash_to_RAM();
+        Copy_FastApp_to_RAM();
         Init_Peripherals();
 
         Configure_Watchdog();
@@ -350,20 +351,8 @@ void Check_Reset_Cause(void)
 
 void Init_Flash(void)
 {
-    // Copia el código inicializador de la flash en RAM
-    uint32 * pcode_read;
-    uint32 * pcode_write;
-    uint16  size;
-    uint16  veces;
 
-    pcode_read=_FlashinitLoadStart;
-    pcode_write=_FlashinitRunStart;
-    size=_FlashinitLoadSize;
-
-    for(veces=0;veces<size;veces++)
-        *(pcode_write++)=*(pcode_read++);
-
-    // Y lo ejecuta
+    Copy_Flash_to_RAM(_FlashinitLoadStart,_FlashinitRunStart,_FlashinitLoadSize);
     Configure_Flash();
 }
 
@@ -505,6 +494,7 @@ void Configure_RAM(void)
     Uint16 flag_initlsx=false;
     Uint16 flag_initgsx=false;
     Uint16 trial;
+    Uint32 aux;
 
 
     // Inicializa M0 y M1 (RAM de CPU)
@@ -525,8 +515,16 @@ void Configure_RAM(void)
     // Inicializa LS0 - LS7 (RAM CPU y CLA)
     MemCfgRegs.LSxMSEL.all=LS_CONFIG;
     MemCfgRegs.LSxCLAPGM.all=LS_IS_PROGRAM;
-    MemCfgRegs.LSxACCPROT0.all=LSXACCPROT0;
-    MemCfgRegs.LSxACCPROT1.all=LSXACCPROT1;
+
+    aux=(Uint32)LSXACCPROT0_H;
+    aux<<=16;
+    aux|=(Uint32)LSXACCPROT0_L;
+    MemCfgRegs.LSxACCPROT0.all=aux;
+
+    aux=(Uint32)LSXACCPROT1_H;
+    aux<<=16;
+    aux|=(Uint32)LSXACCPROT1_L;
+    MemCfgRegs.LSxACCPROT1.all=aux;
 
     MemCfgRegs.LSxINIT.all=LS_RAM_ON;
 
@@ -609,10 +607,20 @@ void Create_Vector_Table(void)
 
 #endif  //defined CPU1
 
-void Copy_Flash_to_RAM(void)
-{
 
+void Copy_FastApp_to_RAM(void)
+{
+    Copy_Flash_to_RAM(_CpuinramLoadStart, _CpuinramRunStart, _FlashinitLoadSize);
 }
+void Copy_Flash_to_RAM(Uint32 * pcode_read, Uint32 * pcode_write, Uint16 size)
+{
+    uint16  veces;
+
+    for(veces=0;veces<size;veces++)
+        *(pcode_write++)=*(pcode_read++);
+}
+
+
 
 void Boot_Failure(void)
 {

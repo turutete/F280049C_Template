@@ -6,8 +6,7 @@
 //	El tamaño máximo permitido para el tamaño de la pila de CLA es 0x800, que es el tamaño de RAMLS5.
 //	Si el valor definido fuera mayor que este límite, se tome el valor límite.
 //
-//	KERNEL utiliza la memoria RAM M0 (0x30B=779) como memoria de programa. Es donde se ejecuta el código de actualización
-//	de software (UPGRADER).
+
 
 #define CLA_SCRATCHPAD_SIZE		0x100
 

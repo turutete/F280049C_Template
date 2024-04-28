@@ -156,6 +156,12 @@
  *
  *  \todo   Hacer ISR de NMI
  *  \todo   Detectar causa de NMI por CLOCKFAIL
+ *  \todo   Init_Peripherals
+ *  \todo   Configure_Watchdog
+ *  \todo   Create_Vector_Table
+ *  \todo   Boot_Failure
+ *  \todo   Init_Kernel_Object
+ *  \todo   Failure_System_Reboot
  *
  *  Bugs Conocidos
  *  --------------
@@ -577,6 +583,90 @@ void Configure_RAM(void)
 void Init_Peripherals(void)
 {
 
+    Uint32 aux, aux2, aux3;
+
+    EALLOW;
+
+    // Configuración PCLKR0 (HPWM, CLA, TIMER0-2, DMA). TIMER2 y DMA se habilitan sin opción
+    if(LS_CONFIG==0)
+        aux2=0;
+    else
+        aux2=1;
+
+    aux=(1<<5)+(TIMER1_PERIPHERAL<<4)+(TIMER0_PERIPHERAL<<3)+(aux2<<2)+1;
+    aux3=(EPWM_SAME_BASETIME<<2)+EPWM_PERIPHERAL;
+    aux3<<=16;
+    CpuSysRegs.PCLKCR0.all=aux+aux3;
+
+    // Configuración PCLKR2 (ePWM1-8)
+    aux=(EPWM8_PERIPHERAL<<7)+(EPWM7_PERIPHERAL<<6)+(EPWM6_PERIPHERAL<<5)+(EPWM5_PERIPHERAL<<4)+(EPWM4_PERIPHERAL<<3)+(EPWM3_PERIPHERAL<<2)+(EPWM2_PERIPHERAL<<1)+EPWM1_PERIPHERAL;
+    CpuSysRegs.PCLKCR2.all=aux;
+
+    // Configuración PCLKR3 (ECAP1-7)
+    aux=(ECAP7_PERIPHERAL<<6)+(ECAP6_PERIPHERAL<<5)+(ECAP5_PERIPHERAL<<4)+(ECAP4_PERIPHERAL<<3)+(ECAP3_PERIPHERAL<<2)+(ECAP2_PERIPHERAL<<1)+ECAP1_PERIPHERAL;
+    CpuSysRegs.PCLKCR3.all=aux;
+
+    // Configuración PCKR4  (EQEP1-2)
+    aux=(EQEP2_PERIPHERAL<<1)+EQEP1_PERIPHERAL;
+    CpuSysRegs.PCLKCR4.all=aux;
+
+    // Configuración PCLKR6 (SD1)
+    CpuSysRegs.PCLKCR6.all=SD_PERIPHERAL;
+
+    // Configuración PCLKR7 (SCIA-B)
+    aux=(SCIB_PERIPHERAL<<1)+SCIA_PERIPHERAL;
+    CpuSysRegs.PCLKCR7.all=aux;
+
+    // Configuración PCLKR8 (SPIA-B)
+    aux=(SPIB_PERIPHERAL<<1)+SPIA_PERIPHERAL;
+    CpuSysRegs.PCLKCR8.all=aux;
+
+    // Configuración PCLKR9 (I2C)
+    CpuSysRegs.PCLKCR9.all=I2C_PERIPHERAL;
+
+    // Configuración PCLKR10 (CANA-B)
+    aux=(CANB_PERIPHERAL<<1)+CANA_PERIPHERAL;
+    CpuSysRegs.PCLKCR10.all=aux;
+
+    // Configuración PCLKR13 (ADCA-C)
+    aux=(ADCC_PERIPHERAL<<2)+(ADCB_PERIPHERAL<<1)+ADCA_PERIPHERAL;
+    CpuSysRegs.PCLKCR13.all=aux;
+
+    // Configuración PCLKR14 (CMPSS1-7)
+    aux=(CMPSS7_PERIPHERAL<<6)+(CMPSS6_PERIPHERAL<<5)+(CMPSS5_PERIPHERAL<<4)+(CMPSS4_PERIPHERAL<<3)+(CMPSS3_PERIPHERAL<<2)+(CMPSS2_PERIPHERAL<<1)+CMPSS1_PERIPHERAL;
+    CpuSysRegs.PCLKCR14.all=aux;
+
+    // Configuración PCLKR15 (PGA1-7)
+    aux=(PGA7_PERIPHERAL<<6)+(PGA6_PERIPHERAL<<5)+(PGA5_PERIPHERAL<<4)+(PGA4_PERIPHERAL<<3)+(PGA3_PERIPHERAL<<2)+(PGA2_PERIPHERAL<<1)+PGA1_PERIPHERAL;
+    CpuSysRegs.PCLKCR15.all=aux;
+
+    // Configuración PCLKR16 (DACA-B)
+    aux=(DACB_PERIPHERAL<<1)+DACA_PERIPHERAL;
+    aux<<=16;
+    CpuSysRegs.PCLKCR16.all=aux;
+
+    // Configuración PCLKR17 (CLB1-4)
+    aux=(CLB4_PERIPHERAL<<3)+(CLB3_PERIPHERAL<<2)+(CLB2_PERIPHERAL<<1)+CLB1_PERIPHERAL;
+    CpuSysRegs.PCLKCR17.all=aux;
+
+    // Configuración PCLKR18 (FSI TX-RX)
+    aux=(FSIRX_PERIPHERAL<<1)+FSITX_PERIPHERAL;
+    CpuSysRegs.PCLKCR18.all=aux;
+
+    // Configuración PCLKR19 (LIN)
+    CpuSysRegs.PCLKCR19.all=LIN_PERIPHERAL;
+
+
+    // Configuración PCLKR20 (PMBUS)
+    CpuSysRegs.PCLKCR20.all=PMBUS_PERIPHERAL;
+
+
+    // Configuración PCLKR21 (DCC)
+    CpuSysRegs.PCLKCR21.all=DCC_PERIPHERAL;
+
+
+    EDIS;
+
 }
 
 void Configure_Watchdog(void)
@@ -639,3 +729,9 @@ void CalmDown_Watchdog(void)
     WdRegs.WDKEY.bit.WDKEY = 0x00AA;
     EDIS;
 }
+
+void Failure_System_Reboot(void)
+{
+
+}
+

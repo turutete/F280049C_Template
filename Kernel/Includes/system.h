@@ -106,6 +106,7 @@
 
 #define LS_CONFIG               (LS7_FOR_CLA<<14)|(LS6_FOR_CLA<<12)|(LS5_FOR_CLA<<10)|(LS4_FOR_CLA<<8)|(LS3_FOR_CLA<<6)|(LS2_FOR_CLA<<4)|(LS1_FOR_CLA<<2)|LS0_FOR_CLA
 
+
 //___________________________________________________________
 
 // CONFIGURAR USO DE MEMORIA LSx DE CLA PARA PROGRAMA O DATO. ASIGNACIÓN CONSECUTIVA PARA EL MISMO USO.
@@ -310,38 +311,80 @@
 
 
 // Seleccionar periféricos que se que usa la aplicación (true: Se usa false: no se usa)
-#define ePWM_PERIPHERAL         false
-#define eCAP_PERIPHERAL         false
-#define eQEP_PERIPHERAL         false
+#define HPWM_PERIPHERAL         false
+#define EPWM1_PERIPHERAL        false
+#define EPWM2_PERIPHERAL        false
+#define EPWM3_PERIPHERAL        false
+#define EPWM4_PERIPHERAL        false
+#define EPWM5_PERIPHERAL        false
+#define EPWM6_PERIPHERAL        false
+#define EPWM7_PERIPHERAL        false
+#define EPWM8_PERIPHERAL        false
+#define ECAP1_PERIPHERAL        false
+#define ECAP2_PERIPHERAL        false
+#define ECAP3_PERIPHERAL        false
+#define ECAP4_PERIPHERAL        false
+#define ECAP5_PERIPHERAL        false
+#define ECAP6_PERIPHERAL        false
+#define ECAP7_PERIPHERAL        false
+#define EQEP1_PERIPHERAL        false
+#define EQEP2_PERIPHERAL        false
 #define SD_PERIPHERAL           false
-#define ADC_PERIPHERAL          false
-#define GPIO_PERIPHERAL         false
+#define CMPSS1_PERIPHERAL       false
+#define CMPSS2_PERIPHERAL       false
+#define CMPSS3_PERIPHERAL       false
+#define CMPSS4_PERIPHERAL       false
+#define CMPSS5_PERIPHERAL       false
+#define CMPSS6_PERIPHERAL       false
+#define CMPSS7_PERIPHERAL       false
+#define DACA_PERIPHERAL         false
+#define DACB_PERIPHERAL         false
+#define PGA1_PERIPHERAL         false
+#define PGA2_PERIPHERAL         false
+#define PGA3_PERIPHERAL         false
+#define PGA4_PERIPHERAL         false
+#define PGA5_PERIPHERAL         false
+#define PGA6_PERIPHERAL         false
+#define PGA7_PERIPHERAL         false
+#define CLB1_PERIPHERAL         false
+#define CLB2_PERIPHERAL         false
+#define CLB3_PERIPHERAL         false
+#define CLB4_PERIPHERAL         false
+#define GPIO_PERIPHERAL         true
 #define IXBAR_PERIPHERAL        false
 #define OXBAR_PERIPHERAL        false
-#define CMPSS_PERIPHERAL        false
-#define DAC_PERIPHERAL          false
+#define PWMXBAR_PERIPHERAL      false
+#define PMBUS_PERIPHERAL        false
 #define SPIA_PERIPHERAL         false
 #define SPIB_PERIPHERAL         false
+#define FSITX_PERIPHERAL        false
+#define FSIRX_PERIPHERAL        false
 #define CANA_PERIPHERAL         false
 #define CANB_PERIPHERAL         false
+#define ADCA_PERIPHERAL         true
+#define ADCB_PERIPHERAL         true
+#define ADCC_PERIPHERAL         true
+#define LIN_PERIPHERAL          false
 #define SCIA_PERIPHERAL         false
 #define SCIB_PERIPHERAL         false
 #define I2C_PERIPHERAL          false
 #define NMI_WD_PERIPHERAL       true
-#define PGA_PERIPHERAL          false
-#define PWMXBAR_PERIPHERAL      false
-#define PMBUS_PERIPHERAL        false
-#define FSI_PERIPHERAL          false
-#define LIN_PERIPHERAL          false
 #define WINDOWEDWD_PERIPHERAL   false
-#define HRPWM_PERIPHERAL        false
-#define USB_PERIPHERAL          false
-#define MCBSP_PERIPHERAL        false
-#define UPP_PERIPHERAL          false
-#define EMIF_PERIPHERAL         false
+#define DCC_PERIPHERAL          false
 
 
+// Seleccionar uso de TIMER0 y TIMER1 (TIMER2 está habilitado de forma forzosa. No es opcional. false= No se usa. true=Sí
+#define TIMER0_PERIPHERAL       false
+#define TIMER1_PERIPHERAL       false
 
+// Configurar si las PWMs usan la misma base de tiempo o no
+#define EPWM_PERIPHERAL         (EPWM1_PERIPHERAL|EPWM2_PERIPHERAL|EPWM3_PERIPHERAL|EPWM4_PERIPHERAL|EPWM5_PERIPHERAL|EPWM6_PERIPHERAL|EPWM7_PERIPHERAL|EPWM8_PERIPHERAL)
 
+#if (EPWM_PERIPHERAL==true)
+#define EPWM_SAME_BASETIME      true
+#else
+//NO MODIFICAR SIGUIENTE LÍNEA
+#define EPWM_SAME_BASETIME      false
+#endif // EPWM_PERIPHERAL
 
 #endif /* INCLUDES_SYSTEM_H_ */

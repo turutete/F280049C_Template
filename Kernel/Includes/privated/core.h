@@ -79,6 +79,8 @@ extern uint16 _CpuinramLoadSize;
 // Método público para Kernel, pero no accesible a Aplicación
 extern void CalmDown_Watchdog(void);
 extern void Failure_System_Reboot(void);
+extern void Activate_Watchdog(void);
+extern void Deactivate_Watchdog(void);
 
 #endif
 

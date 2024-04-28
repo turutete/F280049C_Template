@@ -156,8 +156,6 @@
  *
  *  \todo   Hacer ISR de NMI
  *  \todo   Detectar causa de NMI por CLOCKFAIL
- *  \todo   Init_Peripherals
- *  \todo   Configure_Watchdog
  *  \todo   Create_Vector_Table
  *  \todo   Boot_Failure
  *  \todo   Init_Kernel_Object
@@ -214,6 +212,8 @@ void Boot_Failure(void);
 void Init_Kernel_Object(int16);
 void CalmDown_Watchdog(void);
 void Failure_System_Reboot(void);
+void Activate_Watchdog(void);
+void Deactivate_Watchdog(void);
 
 // Métodos de core.c
 void Pre_Kernel(void)
@@ -671,6 +671,36 @@ void Init_Peripherals(void)
 
 void Configure_Watchdog(void)
 {
+    Uint16 aux;
+
+    aux=0x032F;     // Prediv=1/4096, WD disabled Prescaler=1/64  Check=5
+    EALLOW;
+
+    // Configura el periodo del Watchdog al máximo posible (INTOSC1/(4096*64)-->26ms si INTOSC1=1MHz)
+    WdRegs.WDCR.all=aux;
+
+    EDIS;
+
+}
+
+void Activate_Watchdog(void)
+{
+    EALLOW;
+    WdRegs.WDCR.all|=0x0068;
+    EDIS;
+}
+
+void Deactivate_Watchdog(void)
+{
+    Uint16 aux;
+
+    aux=WdRegs.WDWCR.all;
+    aux&=0xFFBF;
+    aux|=0x0028;
+
+    EALLOW;
+    WdRegs.WDCR.all=aux;
+    EDIS;
 
 }
 

@@ -157,9 +157,7 @@
  *  \todo   Hacer ISR de NMI
  *  \todo   Detectar causa de NMI por CLOCKFAIL
  *  \todo   Create_Vector_Table
- *  \todo   Boot_Failure
  *  \todo   Init_Kernel_Object
- *  \todo   Failure_System_Reboot
  *
  *  Bugs Conocidos
  *  --------------
@@ -208,7 +206,6 @@ void Copy_Flash_to_RAM(Uint32 *,Uint32 *,Uint16);
 void Init_Peripherals(void);
 void Configure_Watchdog(void);
 void Create_Vector_Table(void);
-void Boot_Failure(void);
 void Init_Kernel_Object(int16);
 void CalmDown_Watchdog(void);
 void Failure_System_Reboot(void);
@@ -245,7 +242,7 @@ void Pre_Kernel(void)
     else
     {
         Diagnosys.Write_Event(UNEXPECTED_PROCESSOR);
-        Boot_Failure();
+        Failure_System_Reboot();
     }
 
 }
@@ -742,11 +739,6 @@ void Copy_Flash_to_RAM(Uint32 * pcode_read, Uint32 * pcode_write, Uint16 size)
 
 
 
-void Boot_Failure(void)
-{
-
-}
-
 void Init_Kernel_Object(int16 estado)
 {
 
@@ -762,6 +754,10 @@ void CalmDown_Watchdog(void)
 
 void Failure_System_Reboot(void)
 {
+    Activate_Watchdog();
+    Diagnosys.Write_Event(WATCHDOG_CRITICAL_ERROR);
+    EALLOW;
+    WdRegs.WDCR.bit.WDDIS=0;                            // Fuerza Watchdog al no escribir 101 en WDCHK
 
 }
 

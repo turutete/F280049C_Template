@@ -175,6 +175,7 @@
 
 
 #include <core.h>
+#include <nmi.h>
 
 // Definiciones locales
 #define CPU1_ID     1
@@ -209,8 +210,7 @@ void Create_Vector_Table(void);
 void Init_Kernel_Object(int16);
 void CalmDown_Watchdog(void);
 void Failure_System_Reboot(void);
-void Activate_Watchdog(void);
-void Deactivate_Watchdog(void);
+
 
 // Métodos de core.c
 void Pre_Kernel(void)
@@ -218,6 +218,8 @@ void Pre_Kernel(void)
     int16 estado;
 
     Diagnosys.Init_System_Log();
+
+    Nmi.Configure_NMI();
 
     Power_On();
 
@@ -257,7 +259,7 @@ void Kernel(void)
 
 void Power_On(void)
 {
- #if (DCDC_1200mV_EXTERNO==false)
+ #if (DCDC_1200mV_EXTERNO==false) //if (1)
 
     int16 counter;
     int16 flag;
@@ -314,7 +316,7 @@ void Power_On(void)
     kernel.kernel_status.bits.DCDC_1200mV=DCDC_EXTERNAL;
     Diagnosys.Write_Event(POWER_ON_OK);
 
-#endif
+#endif //If (1)
 
 }
 
@@ -402,8 +404,8 @@ void Configure_Clocks(void)
 
     EALLOW;
 
-#if (CLOCK_EXTERN==true)
-#if (SINGLE_ENDED==false)
+#if (CLOCK_EXTERN==true) // if (2)
+#if (SINGLE_ENDED==false) // if(2.1)
     // External oscilator
     ClkCfgRegs.XTALCR.bit.OSCOFF=0;
     ClkCfgRegs.XTALCR.bit.SE=1;
@@ -474,6 +476,7 @@ void Configure_Clocks(void)
 
     mult=(multfrac<<8)+multint;
     ClkCfgRegs.SYSPLLMULT.all=(Uint32)mult;
+#endif // if 2.1
 
 #if (CANA_PERIPHERAL==true)
     ClkCfgRegs.CLKSRCCTL2.bit.CANABCLKSEL=SOURCE_CLK;
@@ -484,7 +487,7 @@ void Configure_Clocks(void)
 #endif
 
 
-#endif
+#endif // if(2)
 
 
     EDIS;
@@ -722,9 +725,6 @@ void Create_Vector_Table(void)
 
 }
 
-#endif  //defined CPU1
-
-
 void Copy_FastApp_to_RAM(void)
 {
     Copy_Flash_to_RAM(_CpuinramLoadStart, _CpuinramRunStart, _FlashinitLoadSize);
@@ -754,10 +754,11 @@ void CalmDown_Watchdog(void)
 
 void Failure_System_Reboot(void)
 {
-    Activate_Watchdog();
+
     Diagnosys.Write_Event(WATCHDOG_CRITICAL_ERROR);
-    EALLOW;
-    WdRegs.WDCR.bit.WDDIS=0;                            // Fuerza Watchdog al no escribir 101 en WDCHK
+
 
 }
+
+
 

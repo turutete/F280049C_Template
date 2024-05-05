@@ -154,8 +154,6 @@
  *  ToDos
  *  -----
  *
- *  \todo   Hacer ISR de NMI
- *  \todo   Detectar causa de NMI por CLOCKFAIL
  *  \todo   Create_Vector_Table
  *  \todo   Init_Kernel_Object
  *
@@ -208,7 +206,6 @@ void Copy_Flash_to_RAM(Uint32 *,Uint32 *,Uint16);
 void Init_Peripherals(void);
 void Create_Vector_Table(void);
 void Init_Kernel_Object(int16);
-void CalmDown_Watchdog(void);
 void Failure_System_Reboot(void);
 
 
@@ -714,8 +711,8 @@ void Init_Kernel_Object(int16 estado)
 
 void Failure_System_Reboot(void)
 {
-    Diagnosys.Write_Event(WATCHDOG_CRITICAL_ERROR);
-
+    Diagnosys.Write_Event(BOOTING_CRITICAL_ERROR);
+    Nmi.Force_System_Reset();
 }
 
 

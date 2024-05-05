@@ -176,6 +176,7 @@
 
 #include <core.h>
 #include <nmi.h>
+#include <watchdog.h>
 
 // Definiciones locales
 #define CPU1_ID     1
@@ -205,7 +206,6 @@ void Configure_RAM(void);
 void Copy_FastApp_to_RAM(void);
 void Copy_Flash_to_RAM(Uint32 *,Uint32 *,Uint16);
 void Init_Peripherals(void);
-void Configure_Watchdog(void);
 void Create_Vector_Table(void);
 void Init_Kernel_Object(int16);
 void CalmDown_Watchdog(void);
@@ -236,7 +236,7 @@ void Pre_Kernel(void)
         Copy_FastApp_to_RAM();
         Init_Peripherals();
 
-        Configure_Watchdog();
+        watchdog.Configure_Watchdog();
 
         Create_Vector_Table();
         Init_Kernel_Object(estado);
@@ -669,40 +669,7 @@ void Init_Peripherals(void)
 
 }
 
-void Configure_Watchdog(void)
-{
-    Uint16 aux;
 
-    aux=0x032F;     // Prediv=1/4096, WD disabled Prescaler=1/64  Check=5
-    EALLOW;
-
-    // Configura el periodo del Watchdog al máximo posible (INTOSC1/(4096*64)-->26ms si INTOSC1=1MHz)
-    WdRegs.WDCR.all=aux;
-
-    EDIS;
-
-}
-
-void Activate_Watchdog(void)
-{
-    EALLOW;
-    WdRegs.WDCR.all|=0x0068;
-    EDIS;
-}
-
-void Deactivate_Watchdog(void)
-{
-    Uint16 aux;
-
-    aux=WdRegs.WDWCR.all;
-    aux&=0xFFBF;
-    aux|=0x0028;
-
-    EALLOW;
-    WdRegs.WDCR.all=aux;
-    EDIS;
-
-}
 
 void Create_Vector_Table(void)
 {
@@ -744,19 +711,10 @@ void Init_Kernel_Object(int16 estado)
 
 }
 
-void CalmDown_Watchdog(void)
-{
-    EALLOW;
-    WdRegs.WDKEY.bit.WDKEY = 0x0055;
-    WdRegs.WDKEY.bit.WDKEY = 0x00AA;
-    EDIS;
-}
 
 void Failure_System_Reboot(void)
 {
-
     Diagnosys.Write_Event(WATCHDOG_CRITICAL_ERROR);
-
 
 }
 

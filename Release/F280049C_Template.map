@@ -1,7 +1,7 @@
 ******************************************************************************
              TMS320C2000 Linker PC v22.6.0                     
 ******************************************************************************
->> Linked Sat May  4 10:10:11 2024
+>> Linked Sun May  5 10:24:24 2024
 
 OUTPUT FILE NAME:   <F280049C_Template.out>
 ENTRY POINT SYMBOL: "_c_int00"  address: 0008020d
@@ -20,7 +20,7 @@ PAGE 0:
   RAMGS0                0000c000   00002000  00000000  00002000  RWIX
   RAMGS1                0000e000   00002000  00000000  00002000  RWIX
   BEGIN                 00080000   00000002  00000002  00000000  RWIX
-  FLASH_MEMORY          00080002   0001ffee  00000322  0001fccc  RWIX
+  FLASH_MEMORY          00080002   0001ffee  0000037e  0001fc70  RWIX
   RESET                 003fffc0   00000002  00000000  00000002  RWIX
 
 PAGE 1:
@@ -116,7 +116,7 @@ PAGE 1:
   RAMLS5                0000a900   00000700  00000000  00000700  RWIX
   RAMLS6                0000b000   00000800  00000000  00000800  RWIX
   RAMLS7                0000b800   00000800  00000000  00000800  RWIX
-  RAMGS2                00010000   00002000  000000a4  00001f5c  RWIX
+  RAMGS2                00010000   00002000  000000ae  00001f52  RWIX
   RAMGS3                00012000   00002000  00000000  00002000  RWIX
   CANA                  00048000   00000800  00000164  0000069c  RWIX
   CANB                  0004a000   00000800  00000164  0000069c  RWIX
@@ -163,27 +163,29 @@ section   page    origin      length       input sections
 *          0    00080000    00000002     
                   00080000    00000002     GotoMain.obj (.codestart)
 
-.text      0    00080004    00000301     
+.text      0    00080004    00000350     
                   00080004    00000140     realtime.obj (.text)
                   00080144    00000068     Nmi.obj (.text:retain)
                   000801ac    00000061     realtime.obj (.text:retain)
                   0008020d    00000056     rts2800_fpu32.lib : boot28.asm.obj (.text)
-                  00080263    00000029                       : exit.c.obj (.text)
-                  0008028c    00000024                       : cpy_tbl.c.obj (.text)
-                  000802b0    0000001d                       : memcpy.c.obj (.text)
-                  000802cd    00000012                       : args_main.c.obj (.text)
-                  000802df    00000011     Nmi.obj (.text)
-                  000802f0    00000009     main.obj (.text)
-                  000802f9    00000009     rts2800_fpu32.lib : _lock.c.obj (.text)
-                  00080302    00000002                       : pre_init.c.obj (.text)
-                  00080304    00000001                       : startup.c.obj (.text)
+                  00080263    0000004f     Watchdog.obj (.text)
+                  000802b2    00000029     rts2800_fpu32.lib : exit.c.obj (.text)
+                  000802db    00000024                       : cpy_tbl.c.obj (.text)
+                  000802ff    0000001d                       : memcpy.c.obj (.text)
+                  0008031c    00000012                       : args_main.c.obj (.text)
+                  0008032e    00000011     Nmi.obj (.text)
+                  0008033f    00000009     main.obj (.text)
+                  00080348    00000009     rts2800_fpu32.lib : _lock.c.obj (.text)
+                  00080351    00000002                       : pre_init.c.obj (.text)
+                  00080353    00000001                       : startup.c.obj (.text)
 
-.cinit     0    00080308    00000021     
-                  00080308    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
-                  00080316    00000007     Nmi.obj (.cinit)
-                  0008031d    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
-                  00080322    00000005                       : _lock.c.obj (.cinit:__unlock)
-                  00080327    00000002     --HOLE-- [fill = 0]
+.cinit     0    00080354    0000002e     
+                  00080354    0000000e     rts2800_fpu32.lib : exit.c.obj (.cinit)
+                  00080362    0000000d     Watchdog.obj (.cinit)
+                  0008036f    00000007     Nmi.obj (.cinit)
+                  00080376    00000005     rts2800_fpu32.lib : _lock.c.obj (.cinit:__lock)
+                  0008037b    00000005                       : _lock.c.obj (.cinit:__unlock)
+                  00080380    00000002     --HOLE-- [fill = 0]
 
 .pinit     0    00080004    00000000     UNINITIALIZED
 
@@ -531,14 +533,15 @@ GpioDataRegsFile
 *          1    00007f00    0000003a     UNINITIALIZED
                   00007f00    0000003a     f28004x_globalvariabledefs.obj (GpioDataRegsFile)
 
-.ebss      1    00010000    000000a4     UNINITIALIZED
+.ebss      1    00010000    000000ae     UNINITIALIZED
                   00010000    00000070     realtime.obj (.ebss:_timer_service)
-                  00010070    00000006     rts2800_fpu32.lib : exit.c.obj (.ebss)
-                  00010076    00000004     Nmi.obj (.ebss)
-                  0001007a    00000004     core.obj (.ebss)
-                  0001007e    00000002     rts2800_fpu32.lib : _lock.c.obj (.ebss:__lock)
+                  00010070    0000000a     Watchdog.obj (.ebss)
+                  0001007a    00000006     rts2800_fpu32.lib : exit.c.obj (.ebss)
                   00010080    00000022     realtime.obj (.ebss)
-                  000100a2    00000002     rts2800_fpu32.lib : _lock.c.obj (.ebss:__unlock)
+                  000100a2    00000004     Nmi.obj (.ebss)
+                  000100a6    00000004     core.obj (.ebss)
+                  000100aa    00000002     rts2800_fpu32.lib : _lock.c.obj (.ebss:__lock)
+                  000100ac    00000002                       : _lock.c.obj (.ebss:__unlock)
 
 CLA1_Prog 
 *          0    00008000    00000000     UNINITIALIZED
@@ -698,8 +701,9 @@ MODULE SUMMARY
                                                                                     
     .\Kernel\Src\Drivers\
        Nmi.obj                          121    7                  4                 
+       Watchdog.obj                     79     13                 10                
     +--+--------------------------------+------+------------------+--------------------+
-       Total:                           121    7                  4                 
+       Total:                           200    20                 14                
                                                                                     
     .\Kernel\Src\Real Time\
        realtime.obj                     417    0                  146               
@@ -725,12 +729,12 @@ MODULE SUMMARY
                                                                                     
        Stack:                           0      0                  512               
     +--+--------------------------------+------+------------------+--------------------+
-       Grand Total:                     771    31                 10763             
+       Grand Total:                     850    44                 10773             
 
 
 LINKER GENERATED MEMRANGE CRC TABLES
 
-_ccs_flash_checksum @ 00000000 records: 2, size/record: 6, table size: 18, algorithm=C28_CHECKSUM_16(ID=13), CRC: 0000cfda
+_ccs_flash_checksum @ 00000000 records: 2, size/record: 6, table size: 18, algorithm=C28_CHECKSUM_16(ID=13), CRC: 00006bc5
 	BEGIN: page=0, load addr=00080000, size=00000002
 	FLASH_MEMORY: page=0, load addr=00080002, size=0001ffee
 
@@ -899,18 +903,19 @@ address     data page           name
 
 00010000     400 (00010000)     _timer_service
 
-00010070     401 (00010040)     ___TI_enable_exit_profile_output
-00010072     401 (00010040)     ___TI_cleanup_ptr
-00010074     401 (00010040)     ___TI_dtors_ptr
-00010076     401 (00010040)     _Nmi
-0001007a     401 (00010040)     _dispositivo
-0001007e     401 (00010040)     __lock
+00010070     401 (00010040)     _watchdog
+0001007a     401 (00010040)     ___TI_enable_exit_profile_output
+0001007c     401 (00010040)     ___TI_cleanup_ptr
+0001007e     401 (00010040)     ___TI_dtors_ptr
 
 00010080     402 (00010080)     _ind_timer_service
 00010081     402 (00010080)     _timers_used
 00010082     402 (00010080)     _reloj_sistema
 00010086     402 (00010080)     _RealTime
-000100a2     402 (00010080)     __unlock
+000100a2     402 (00010080)     _Nmi
+000100a6     402 (00010080)     _dispositivo
+000100aa     402 (00010080)     __lock
+000100ac     402 (00010080)     __unlock
 
 00048000    1200 (00048000)     _CanaRegs
 
@@ -969,7 +974,7 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 page  address   name                                 
 ----  -------   ----                                 
 0     00080004  .text                                
-0     00080263  C$$EXIT                              
+0     000802b2  C$$EXIT                              
 1     0005f4c0  _AccessProtectionRegs                
 1     00007400  _AdcaRegs                            
 1     00000b00  _AdcaResultRegs                      
@@ -979,6 +984,7 @@ page  address   name
 1     00000b40  _AdccResultRegs                      
 1     0005d700  _AnalogSubsysRegs                    
 1     00007a40  _CLBXbarRegs                         
+0     000802a4  _CalmaWatchdog                       
 1     00048000  _CanaRegs                            
 1     0004a000  _CanbRegs                            
 0     00080133  _Check_Timer                         
@@ -1010,7 +1016,8 @@ abs   00000000  _ClainramRunSize
 1     00005d00  _Cmpss5Regs                          
 1     00005d20  _Cmpss6Regs                          
 1     00005d40  _Cmpss7Regs                          
-0     000802e7  _Configure_Nmi                       
+0     00080276  _ConfiguraWatchdog                   
+0     00080336  _Configure_Nmi                       
 1     0005d300  _CpuSysRegs                          
 1     00000c00  _CpuTimer0Regs                       
 1     00000c08  _CpuTimer1Regs                       
@@ -1082,17 +1089,19 @@ abs   00000000  _FlashinitRunSize
 1     00005360  _HRCap6Regs                          
 1     000053a0  _HRCap7Regs                          
 1     00007300  _I2caRegs                            
+0     0008026e  _IniciaWatchdog                      
 0     000800b8  _Init_Realtime                       
 1     00007900  _InputXbarRegs                       
 0     000801ac  _Kernel_Realtime                     
 1     00006a00  _LinaRegs                            
 1     0005f400  _MemCfgRegs                          
 1     0005f500  _MemoryErrorRegs                     
-1     00010076  _Nmi                                 
+1     000100a2  _Nmi                                 
 1     00007060  _NmiIntruptRegs                      
 0     00080144  _Nmi_Check_Source                    
-0     000802df  _Nmi_SW                              
+0     0008032e  _Nmi_SW                              
 1     00007a80  _OutputXbarRegs                      
+0     00080263  _ParaWatchdog                        
 1     00005b00  _Pga1Regs                            
 1     00005b10  _Pga2Regs                            
 1     00005b20  _Pga3Regs                            
@@ -1127,46 +1136,47 @@ abs   00000000  _FlashinitRunSize
 1     000002f6  __STACK_END                          
 abs   00000200  __STACK_SIZE                         
 0     00000000  __TI_MEMRANGE_CRC__ccs_flash_checksum
-1     00010072  ___TI_cleanup_ptr                    
-1     00010074  ___TI_dtors_ptr                      
-1     00010070  ___TI_enable_exit_profile_output     
+1     0001007c  ___TI_cleanup_ptr                    
+1     0001007e  ___TI_dtors_ptr                      
+1     0001007a  ___TI_enable_exit_profile_output     
 abs   ffffffff  ___TI_pprof_out_hndl                 
 abs   ffffffff  ___TI_prof_data_size                 
 abs   ffffffff  ___TI_prof_data_start                
 abs   ffffffff  ___binit__                           
 abs   ffffffff  ___c_args__                          
-0     00080308  ___cinit__                           
-0     00080305  ___etext__                           
+0     00080354  ___cinit__                           
+0     00080354  ___etext__                           
 abs   ffffffff  ___pinit__                           
 0     00080004  ___text__                            
-0     000802cd  __args_main                          
-1     0001007e  __lock                               
-0     00080301  __nop                                
-0     000802fd  __register_lock                      
-0     000802f9  __register_unlock                    
+0     0008031c  __args_main                          
+1     000100aa  __lock                               
+0     00080350  __nop                                
+0     0008034c  __register_lock                      
+0     00080348  __register_unlock                    
 1     000000f6  __stack                              
-0     00080304  __system_post_cinit                  
-0     00080302  __system_pre_init                    
-1     000100a2  __unlock                             
-0     00080263  _abort                               
+0     00080353  __system_post_cinit                  
+0     00080351  __system_pre_init                    
+1     000100ac  __unlock                             
+0     000802b2  _abort                               
 0     0008020d  _c_int00                             
 0     00000000  _ccs_flash_checksum                  
-0     0008028c  _copy_in                             
-1     0001007a  _dispositivo                         
-0     00080265  _exit                                
+0     000802db  _copy_in                             
+1     000100a6  _dispositivo                         
+0     000802b4  _exit                                
 1     00010080  _ind_timer_service                   
 1     00000401  _index_newest                        
 1     00000400  _index_oldest                        
 1     000004e0  _kernel                              
-0     000802f0  _main                                
-0     000802b0  _memcpy                              
+0     0008033f  _main                                
+0     000802ff  _memcpy                              
 1     00010082  _reloj_sistema                       
 1     00000440  _system_log                          
 1     00010000  _timer_service                       
 1     00010081  _timers_used                         
+1     00010070  _watchdog                            
 abs   ffffffff  binit                                
-0     00080308  cinit                                
-0     00080305  etext                                
+0     00080354  cinit                                
+0     00080354  etext                                
 abs   ffffffff  pinit                                
 
 
@@ -1208,24 +1218,28 @@ page  address   name
 0     00080144  _Nmi_Check_Source                    
 0     000801ac  _Kernel_Realtime                     
 0     0008020d  _c_int00                             
-0     00080263  C$$EXIT                              
-0     00080263  _abort                               
-0     00080265  _exit                                
-0     0008028c  _copy_in                             
-0     000802b0  _memcpy                              
-0     000802cd  __args_main                          
-0     000802df  _Nmi_SW                              
-0     000802e7  _Configure_Nmi                       
-0     000802f0  _main                                
-0     000802f9  __register_unlock                    
-0     000802fd  __register_lock                      
-0     00080301  __nop                                
-0     00080302  __system_pre_init                    
-0     00080304  __system_post_cinit                  
-0     00080305  ___etext__                           
-0     00080305  etext                                
-0     00080308  ___cinit__                           
-0     00080308  cinit                                
+0     00080263  _ParaWatchdog                        
+0     0008026e  _IniciaWatchdog                      
+0     00080276  _ConfiguraWatchdog                   
+0     000802a4  _CalmaWatchdog                       
+0     000802b2  C$$EXIT                              
+0     000802b2  _abort                               
+0     000802b4  _exit                                
+0     000802db  _copy_in                             
+0     000802ff  _memcpy                              
+0     0008031c  __args_main                          
+0     0008032e  _Nmi_SW                              
+0     00080336  _Configure_Nmi                       
+0     0008033f  _main                                
+0     00080348  __register_unlock                    
+0     0008034c  __register_lock                      
+0     00080350  __nop                                
+0     00080351  __system_pre_init                    
+0     00080353  __system_post_cinit                  
+0     00080354  ___cinit__                           
+0     00080354  ___etext__                           
+0     00080354  cinit                                
+0     00080354  etext                                
 1     000000f6  __stack                              
 1     000002f6  __STACK_END                          
 1     00000400  _index_oldest                        
@@ -1317,17 +1331,18 @@ page  address   name
 1     00007c00  _GpioCtrlRegs                        
 1     00007f00  _GpioDataRegs                        
 1     00010000  _timer_service                       
-1     00010070  ___TI_enable_exit_profile_output     
-1     00010072  ___TI_cleanup_ptr                    
-1     00010074  ___TI_dtors_ptr                      
-1     00010076  _Nmi                                 
-1     0001007a  _dispositivo                         
-1     0001007e  __lock                               
+1     00010070  _watchdog                            
+1     0001007a  ___TI_enable_exit_profile_output     
+1     0001007c  ___TI_cleanup_ptr                    
+1     0001007e  ___TI_dtors_ptr                      
 1     00010080  _ind_timer_service                   
 1     00010081  _timers_used                         
 1     00010082  _reloj_sistema                       
 1     00010086  _RealTime                            
-1     000100a2  __unlock                             
+1     000100a2  _Nmi                                 
+1     000100a6  _dispositivo                         
+1     000100aa  __lock                               
+1     000100ac  __unlock                             
 1     00048000  _CanaRegs                            
 1     0004a000  _CanbRegs                            
 1     0005d000  _DevCfgRegs                          
@@ -1375,4 +1390,4 @@ abs   ffffffff  ___pinit__
 abs   ffffffff  binit                                
 abs   ffffffff  pinit                                
 
-[200 symbols]
+[205 symbols]

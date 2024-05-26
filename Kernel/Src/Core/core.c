@@ -674,6 +674,8 @@ void Create_Vector_Table(void)
     PieCtrlRegs.PIECTRL.bit.ENPIE=1;
     EALLOW;
 
+
+
     // Configuración de la tabla de vectores de interrupción del PIE
     //PieVectTable.x=&isr_name;
 
@@ -685,7 +687,9 @@ void Create_Vector_Table(void)
     // Habilitación de interrupciones en los periféricos
 
 
+    EDIS;
     EINT;
+
 
 }
 

@@ -311,7 +311,6 @@
 
 
 // Seleccionar periféricos que se que usa la aplicación (true: Se usa false: no se usa)
-#define HPWM_PERIPHERAL         false
 #define EPWM1_PERIPHERAL        false
 #define EPWM2_PERIPHERAL        false
 #define EPWM3_PERIPHERAL        false
@@ -386,5 +385,176 @@
 //NO MODIFICAR SIGUIENTE LÍNEA
 #define EPWM_SAME_BASETIME      false
 #endif // EPWM_PERIPHERAL
+
+// Definición de la funcionalidad del pinout. Indicar true a GPIO usada. false las que no
+#if EPWM1_PERIPHERAL==true
+#define GPIO0_IS_PWM1           true
+#define GPIO1_IS_PWM1           true
+#endif
+
+#if EPWM2_PERIPHERAL==true
+#define GPIO2_IS_PWM2           true
+#define GPIO3_IS_PWM2           true
+#endif
+
+#if EPWM3_PERIPHERAL==true
+#define GPIO4_IS_PWM3           true
+#define GPIO5_IS_PWM3           true
+#endif
+
+#if EPWM4_PERIPHERAL==true
+#define GPIO6_IS_PWM4           true
+#define GPIO7_IS_PWM4           true
+#endif
+
+#if EPWM5_PERIPHERAL==true
+#define GPIO8_IS_PWM5           true
+#define GPIO9_IS_PWM5           true
+#endif
+
+#if EPWM6_PERIPHERAL==true
+#define GPIO10_IS_PWM6           true
+#define GPIO11_IS_PWM6           true
+#if GPIO10_IS_PWM6==true
+#define GPIO18_IS_PWM6          false
+#else
+#define GPIO18_IS_PWM6          true
+#endif //GPIO10_IS_PWM6
+#endif
+
+#if EPWM7_PERIPHERAL==true
+#define GPIO12_IS_PWM7           true
+#define GPIO13_IS_PWM7           true
+#if GPIO12_IS_PWM7==true
+#define GPIO28_IS_PWM7          false
+#else
+#define GPIO28_IS_PWM7          true
+#endif //GPIO12_IS_PWM7
+#if GPIO13_IS_PWM7==true
+#define GPIO29_IS_PWM7          false
+#else
+#define GPIO29_IS_PWM7          true
+#endif //GPIO13_IS_PWM7
+#endif
+
+#if EPWM8_PERIPHERAL==true
+#define GPIO14_IS_PWM8           true
+#define GPIO15_IS_PWM8           true
+#if GPIO14_IS_PWM8==true
+#define GPIO24_IS_PWM8          false
+#else
+#define GPIO24_IS_PWM8          true
+#endif //GPIO14_IS_PWM8
+#if GPIO15_IS_PWM8==true
+#define GPIO32_IS_PWM8          false
+#else
+#define GPIO32_IS_PWM8          true
+#endif //GPIO15_IS_PWM8
+#endif
+
+
+#if EQEP1_PERIPHERAL==true
+// SELECCIONAR (TRUE) LAS GPIOS USADAS PARA EQEP1
+// EQEP1A
+#define GPIO6_IS_EQEP           false
+#define GPIO10_IS_EQEP          false
+#define GPIO28_IS_EQEP          false
+#define GPIO35_IS_EQEP          false
+#define GPIO40_IS_EQEP          false
+#define GPIO56_IS_EQEP          false
+// EQEP1B
+#define GPIO7_IS_EQEP           false
+#define GPIO11_IS_EQEP          false
+#define GPIO29_IS_EQEP          false
+#define GPIO37_IS_EQEP          false
+#define GPIO57_IS_EQEP          false
+// EQEP1_STROBE
+#define GPIO8_IS_EQEP           false
+#define GPIO12_IS_EQEP          false
+#define GPIO16_IS_EQEP          false
+#define GPIO22_IS_EQEP          false
+#define GPIO30_IS_EQEP          false
+#define GPIO58_IS_EQEP          false
+// EQEP1_INDEX
+#define GPIO9_IS_EQEP           false
+#define GPIO13_IS_EQEP          false
+#define GPIO17_IS_EQEP          false
+#define GPIO31_IS_EQEP          false
+#define GPIO59_IS_EQEP          false
+#endif
+
+#if EQEP2_PERIPHERAL==true
+// SELECCIONAR (TRUE) LAS GPIOS USADAS PARA EQEP2
+// EQEP2A
+#define GPIO14_IS_EQEP          false
+#define GPIO18_IS_EQEP          false
+#define GPIO24_IS_EQEP          false
+// EQEP2B
+#define GPIO15_IS_EQEP          false
+#define GPIO25_IS_EQEP          false
+// EQEP2_STROBE
+#define GPIO27_IS_EQEP          false
+#define GPIO28_IS_EQEP          false
+#define GPIO56_IS_EQEP          false
+// EQEP2_INDEX
+#define GPIO26_IS_EQEP          false
+#define GPIO29_IS_EQEP          false
+#define GPIO57_IS_EQEP          false
+#endif
+
+#if SD_PERIPHERAL==true
+//SELECCIONAR (TRUE) EL PIN USADO
+//SD1_D1
+#define GPIO16_IS_SD            false
+#define GPIO24_IS_SD            false
+//SD1_D2
+#define GPIO18_IS_SD            false
+#define GPIO26_IS_SD            false
+//SD1_D3
+#define GPIO28_IS_SD            false
+#define GPIO32_IS_SD            false
+//SD1_D4
+#define GPIO22_IS_SD            false
+#define GPIO30_IS_SD            false
+#define GPIO58_IS_SD            false
+//SD1_C1
+#define GPIO17_IS_SD            false
+#define GPIO25_IS_SD            false
+//SD1_C2
+#define GPIO27_IS_SD            false
+//SD1_C3
+#define GPIO29_IS_SD            false
+#define GPIO33_IS_SD            false
+#define GPIO57_IS_SD            false
+//SD1_C4
+#define GPIO31_IS_SD            false
+#define GPIO59_IS_SD            false
+#endif
+
+#define CLB1_PERIPHERAL         false
+#define CLB2_PERIPHERAL         false
+#define CLB3_PERIPHERAL         false
+#define CLB4_PERIPHERAL         false
+#define GPIO_PERIPHERAL         true
+#define IXBAR_PERIPHERAL        false
+#define OXBAR_PERIPHERAL        false
+#define PWMXBAR_PERIPHERAL      false
+#define PMBUS_PERIPHERAL        false
+#define SPIA_PERIPHERAL         false
+#define SPIB_PERIPHERAL         false
+#define FSITX_PERIPHERAL        false
+#define FSIRX_PERIPHERAL        false
+#define CANA_PERIPHERAL         false
+#define CANB_PERIPHERAL         false
+#define ADCA_PERIPHERAL         true
+#define ADCB_PERIPHERAL         true
+#define ADCC_PERIPHERAL         true
+#define LIN_PERIPHERAL          false
+#define SCIA_PERIPHERAL         false
+#define SCIB_PERIPHERAL         false
+#define I2C_PERIPHERAL          false
+#define NMI_WD_PERIPHERAL       true
+#define WINDOWEDWD_PERIPHERAL   false
+#define DCC_PERIPHERAL          false
 
 #endif /* INCLUDES_SYSTEM_H_ */

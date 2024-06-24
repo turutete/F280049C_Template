@@ -13,7 +13,7 @@
  *
  * Para ello, el controlador proporciona la clase **xbar** que permite acceder al conjunto de métodos:
  *
- * Set_InputXbar
+ * Set_InputXbar: void xbar.Set_InputXbar(Uint16 xbar_input, Uint16 gpio)
  * ------------
  *
  * \param[out]  void
@@ -23,7 +23,7 @@
  *              GPIOs del dispositivo, **xbar_input** tomará el valor '1'. Si el valor de GPIO=0xFFFF, **xbar_input**
  *              valdrá 0
  *
- * Set_PwmMux**K**Xbar
+ * Set_PwmMux**K**Xbar  void xbar.Set_PwmMuxkXbar(Uint16 epwmxbar_output,enum MUXk_PWM_XBAR)
  * ---------------
  *
  * \param[out]  void
@@ -46,7 +46,7 @@
  * Una vez especificado este valor de K, el enumerado selector está restringido por código al correspondiente a ese
  * multiplexor.
  *
- * Set_PwmOutInvert
+ * Set_PwmOutInvert void xbar.Set_PwmOutInvert(Uint16 epwxbar_output, bool invert_option)
  * ----------------
  *
  * \param[out]  void
@@ -55,7 +55,7 @@
  *                              se invierte. Si toma un valor diferente, no tiene efecto el cambio.
  *
  *
- * Set_PwmMuxEnabler
+ * Set_PwmMuxEnabler void xbar.Set_PwmMuxEnabler(Uint16 epwmxbar_output, Uint32 trip_enaber)
  * -----------------
  *
  * \param[out]  void
